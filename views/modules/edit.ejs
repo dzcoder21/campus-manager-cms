@@ -1,0 +1,94 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Edit Module</h2>
+    <small class="text-muted">Update module details, outcomes, and assessments</small>
+  </div>
+  <a class="btn btn-outline-secondary" href="/modules/<%= module._id %>">Back to Module</a>
+</div>
+<%- include('../partials/alerts') %>
+<div class="form-container">
+  <form action="/modules/<%= module._id %>?_method=PUT" method="POST">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control" value="<%= module.name %>" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Code</label>
+        <input type="text" name="code" class="form-control" value="<%= module.code %>" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Course</label>
+        <select name="course" class="form-select" required>
+          <% courses.forEach(c => { %>
+            <option value="<%= c._id %>" <%= String(module.course) === String(c._id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Department</label>
+        <select name="department" class="form-select" required>
+          <% departments.forEach(dep => { %>
+            <option value="<%= dep._id %>" <%= String(module.department) === String(dep._id) ? 'selected' : '' %>><%= dep.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Credits</label>
+        <input type="number" name="credits" class="form-control" min="1" value="<%= module.credits %>" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Semester</label>
+        <select name="semester" class="form-select" required>
+          <% semesters.forEach(s => { %>
+            <option value="<%= s %>" <%= Number(module.semester) === Number(s) ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-12 form-check">
+        <input class="form-check-input" type="checkbox" name="isCore" id="isCore" <%= module.isCore ? 'checked' : '' %> />
+        <label class="form-check-label" for="isCore">Core module</label>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Lecturer</label>
+        <input type="text" name="lecturer" class="form-control" value="<%= module.lecturer %>" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Prerequisites</label>
+        <select name="prerequisites" class="form-select" multiple>
+          <% existingModules.forEach(m => { %>
+            <option value="<%= m._id %>" <%= module.prerequisites.map(String).includes(String(m._id)) ? 'selected' : '' %>><%= m.name %> (<%= m.code %>)</option>
+          <% }) %>
+        </select>
+        <div class="form-text">Hold Ctrl/Cmd to select multiple modules.</div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Learning Outcomes (one per line)</label>
+        <textarea name="learningOutcomes" class="form-control" rows="4"><%= module.learningOutcomes %></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Assessment Weights</label>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <input type="number" name="examWeight" class="form-control" placeholder="Exam %" value="<%= module.examWeight %>" min="0" max="100" />
+          </div>
+          <div class="col-md-4">
+            <input type="number" name="courseworkWeight" class="form-control" placeholder="Coursework %" value="<%= module.courseworkWeight %>" min="0" max="100" />
+          </div>
+          <div class="col-md-4">
+            <input type="number" name="practicalWeight" class="form-control" placeholder="Practical %" value="<%= module.practicalWeight %>" min="0" max="100" />
+          </div>
+        </div>
+        <div class="form-text">Exam + Coursework + Practical should total 100%.</div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3"><%= module.description %></textarea>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary">Update</button>
+      <a class="btn btn-secondary" href="/modules/<%= module._id %>">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0"><%= course.name %> (<%= course.code %>)</h2>
+    <small class="text-muted">Course profile and module structure</small>
+  </div>
+  <div>
+    <% if (user && user.role === 'admin') { %>
+      <a href="/courses/<%= course._id %>/modules/new" class="btn btn-success me-2">Add Module</a>
+      <a href="/courses/<%= course._id %>/edit" class="btn btn-outline-primary">Edit</a>
+      <form action="/courses/<%= course._id %>?_method=DELETE" method="POST" class="d-inline">
+        <button class="btn btn-outline-danger" data-confirm="Delete this course?">Delete</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+<div class="mb-3">
+  <a href="/courses" class="btn btn-light border btn-sm">Back to Courses</a>
+</div>
+<%- include('../partials/alerts') %>
+<p><strong>Department:</strong> <a href="/departments/<%= course.department?._id %>"><%= course.department?.name %></a></p>
+<p><strong>Duration:</strong> <%= course.duration %> years</p>
+<p><strong>Credits:</strong> <%= course.credits %></p>
+<p><strong>Fee:</strong> <%= course.fee %></p>
+<p><strong>Dates:</strong> <%= new Date(course.startDate).toDateString() %> to <%= new Date(course.endDate).toDateString() %></p>
+<p><strong>Description:</strong> <%= course.description || '-' %></p>
+<hr/>
+<h4>Modules</h4>
+<ul>
+  <% if (course.modules && course.modules.length) { %>
+    <% course.modules.forEach(m => { %>
+      <li><a href="/modules/<%= m._id %>"><%= m.name %> (<%= m.code %>)</a></li>
+    <% }) %>
+  <% } else { %>
+    <li>No modules yet.</li>
+  <% } %>
+</ul>

@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Courses</h2>
+    <small class="text-muted">Total: <%= courses.length %> courses</small>
+  </div>
+  <% if (user && user.role === 'admin') { %>
+    <a href="/courses/new" class="btn btn-primary">Add Course</a>
+  <% } %>
+</div>
+
+<%- include('../partials/alerts') %>
+
+<form method="GET" class="row g-2 align-items-end mb-3">
+  <div class="col-md-4">
+    <label class="form-label mb-1">Search</label>
+    <input type="text" name="search" class="form-control" placeholder="Name, code, description" value="<%= searchQuery %>" />
+  </div>
+  <div class="col-md-4">
+    <label class="form-label mb-1">Department</label>
+    <select name="department" class="form-select">
+      <option value="">All Departments</option>
+      <% departments.forEach(dep => { %>
+        <option value="<%= dep._id %>" <%= selectedDepartment === String(dep._id) ? 'selected' : '' %>><%= dep.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-2 d-grid">
+    <button class="btn btn-outline-secondary">Apply Filters</button>
+  </div>
+  <div class="col-md-2 d-grid">
+    <a href="/courses" class="btn btn-light border">Reset</a>
+  </div>
+</form>
+
+<div class="table-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Department</th>
+        <th>Duration</th>
+        <th>Credits</th>
+        <th>Fee</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!courses || courses.length === 0) { %>
+        <tr>
+          <td colspan="8" class="text-center text-muted py-4">No courses found for the selected filters.</td>
+        </tr>
+      <% } %>
+      <% courses.forEach(course => { %>
+        <tr>
+          <td><a href="/courses/<%= course._id %>"><%= course.name %></a></td>
+          <td><%= course.code %></td>
+          <td><%= course.department?.name || '-' %></td>
+          <td><%= course.duration %> years</td>
+          <td><%= course.credits %></td>
+          <td><%= course.fee %></td>
+          <td><span class="badge <%= course.isActive ? 'bg-success' : 'bg-secondary' %>"><%= course.isActive ? 'Active' : 'Inactive' %></span></td>
+          <td>
+            <% if (user && user.role === 'admin') { %>
+              <a href="/courses/<%= course._id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+              <form action="/courses/<%= course._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button class="btn btn-sm btn-outline-danger" data-confirm="Delete this course?">Delete</button>
+              </form>
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

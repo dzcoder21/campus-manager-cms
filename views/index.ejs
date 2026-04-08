@@ -1,0 +1,352 @@
+<section class="hero-section">
+    <video class="hero-video" autoplay muted loop>
+        <source src="/images/CMS.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to University CMS</h1>
+        <p class="hero-subtitle">Manage your university's departments, courses, and modules efficiently.</p>
+        <div class="hero-buttons">
+            <a href="/departments" class="btn btn-hero-primary">Explore Departments</a>
+            <a href="/courses" class="btn btn-hero-outline">View Courses</a>
+            <button class="btn btn-hero-login" onclick="openLoginModal()">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Find With ChatGPT Section -->
+<section id="chatgpt-assistant" class="study-section study-section-light">
+    <div class="container">
+        <div class="chatgpt-assistant-card">
+            <div class="chatgpt-assistant-header">
+                <div class="chatgpt-logo-badge" aria-hidden="true">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h2 class="chatgpt-assistant-title mb-1">ChatGPT Assistant</h2>
+                    <p class="chatgpt-assistant-subtitle mb-0">find with chat gpt</p>
+                </div>
+            </div>
+
+            <p class="chatgpt-assistant-help">Ask anything about departments, courses, modules, login, students, and certificates.</p>
+
+            <form id="chatgptAssistantForm" class="chatgpt-assistant-form" autocomplete="off">
+                <div class="chatgpt-input-wrap">
+                    <input
+                        id="chatgptAssistantInput"
+                        type="text"
+                        class="form-control"
+                        placeholder="Type your question here"
+                        maxlength="250"
+                        required
+                    >
+                    <button type="submit" class="btn btn-chatgpt-ask">Ask</button>
+                </div>
+            </form>
+
+            <div class="chatgpt-answer-panel" id="chatgptAnswerPanel" aria-live="polite">
+                Ask a question to see the answer.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Login Modal -->
+<div class="login-modal" id="loginModal">
+    <div class="login-modal-content">
+        <div class="login-modal-header">
+            <h3 class="login-modal-title">
+                <i class="fas fa-user-graduate me-2"></i>Login to University CMS
+            </h3>
+            <button class="login-modal-close" onclick="closeLoginModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="login-modal-body">
+            <form action="/login" method="POST">
+                <div class="form-group mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-envelope me-1"></i>Email Address
+                    </label>
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-lock me-1"></i>Password
+                    </label>
+                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-login-submit">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </button>
+                </div>
+            </form>
+            <div class="login-modal-footer">
+                <p class="mb-0">
+                    Don't have an account? <a href="#" class="login-link">Contact Admin</a>
+                </p>
+                <p class="mb-0">
+                    <a href="#" class="login-link">Forgot Password?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About Study Section -->
+<section class="study-section study-section-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">Excellence in Education</h2>
+                <p class="lead mb-4">At our university, we believe in transforming lives through education. Our comprehensive study programs are designed to nurture intellectual curiosity, foster critical thinking, and prepare students for successful careers in an ever-evolving global landscape.</p>
+                <p>We offer a diverse range of academic disciplines, each supported by world-class faculty, cutting-edge research facilities, and innovative teaching methodologies. Our commitment to academic excellence ensures that every student receives a transformative educational experience that goes beyond traditional learning.</p>
+                <ul class="list-unstyled mt-4">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>World-renowned faculty with industry expertise</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>State-of-the-art research facilities</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Flexible learning pathways</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Global exchange programs</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h4>Comprehensive Curriculum</h4>
+                            <p>Our carefully designed curriculum covers theoretical foundations and practical applications, ensuring holistic development.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4>Expert Faculty</h4>
+                            <p>Learn from distinguished professors and industry experts who bring real-world experience into the classroom.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h4>Research Opportunities</h4>
+                            <p>Engage in groundbreaking research projects that contribute to knowledge advancement and innovation.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <h4>Global Perspective</h4>
+                            <p>Develop a global mindset through international collaborations and diverse cultural experiences.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="study-section study-section-dark">
+    <div class="container">
+        <h2 class="section-title">Our Impact in Numbers</h2>
+        <p class="section-subtitle">Join thousands of successful graduates making a difference worldwide</p>
+        <div class="row">
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stats-box">
+                    <div class="stats-number">15,000+</div>
+                    <p>Students Enrolled</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stats-box">
+                    <div class="stats-number">500+</div>
+                    <p>Expert Faculty</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stats-box">
+                    <div class="stats-number">95%</div>
+                    <p>Employment Rate</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-4">
+                <div class="stats-box">
+                    <div class="stats-number">50+</div>
+                    <p>Study Programs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Programs Section -->
+<section class="study-section study-section-pattern">
+    <div class="container">
+        <h2 class="section-title text-white">Our Study Programs</h2>
+        <p class="section-subtitle text-white">Discover diverse academic pathways tailored to your ambitions</p>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Science & Technology</h4>
+                        <p>Explore cutting-edge programs in computer science, engineering, biotechnology, and data science that prepare you for the digital future.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Business & Management</h4>
+                        <p>Develop leadership skills and business acumen through our comprehensive MBA, finance, marketing, and entrepreneurship programs.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Health Sciences</h4>
+                        <p>Join our prestigious medical, nursing, pharmacy, and public health programs that make a real difference in people's lives.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Arts & Humanities</h4>
+                        <p>Nurture your creativity and critical thinking through literature, philosophy, history, and fine arts programs.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Law & Social Sciences</h4>
+                        <p>Understand society and justice through our law, psychology, sociology, and international relations programs.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="program-card">
+                    <div class="program-image">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="program-content">
+                        <h4>Education & Teaching</h4>
+                        <p>Shape the future by becoming an educator through our innovative teaching and educational leadership programs.</p>
+                        <a href="/courses" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="study-section study-section-light">
+    <div class="container">
+        <h2 class="section-title">Student Success Stories</h2>
+        <p class="section-subtitle">Hear from our alumni about their transformative journey</p>
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">The university's comprehensive study programs and supportive faculty helped me discover my passion for research. The hands-on experience and global exposure prepared me for my current role at a leading tech company.</p>
+                    <p class="testimonial-author">- Sarah Chen, Computer Science '22</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">The diverse learning environment and emphasis on practical skills gave me the confidence to start my own business. The entrepreneurship program provided invaluable mentorship and networking opportunities.</p>
+                    <p class="testimonial-author">- Michael Rodriguez, Business Administration '21</p>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">The medical program's rigorous curriculum and clinical rotations prepared me exceptionally well for my residency. The faculty's dedication to student success is truly remarkable.</p>
+                    <p class="testimonial-author">- Dr. Emily Johnson, Medicine '23</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="cta-title">Begin Your Academic Journey Today</h2>
+        <p class="cta-subtitle">Join thousands of students shaping their future at our prestigious university</p>
+        <a href="/courses" class="btn-cta">Explore Programs</a>
+        <a href="/departments" class="btn-cta ms-3">View Departments</a>
+    </div>
+</section>
+
+<!-- Original Cards Section -->
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Departments</h5>
+                    <p class="card-text">Manage all academic departments in the university.</p>
+                    <a href="/departments" class="btn btn-primary">View Departments</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Courses</h5>
+                    <p class="card-text">Manage all courses offered by the university.</p>
+                    <a href="/courses" class="btn btn-primary">View Courses</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Modules</h5>
+                    <p class="card-text">Manage all modules across different courses.</p>
+                    <a href="/modules" class="btn btn-primary">View Modules</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

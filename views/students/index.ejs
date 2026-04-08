@@ -1,0 +1,103 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Students</h2>
+    <small class="text-muted">Manage student records and academic status</small>
+  </div>
+  <% if (user && user.role === 'admin') { %>
+    <a href="/students/new" class="btn btn-primary">Add Student</a>
+  <% } %>
+</div>
+<%- include('../partials/alerts') %>
+<form method="GET" class="row g-2 align-items-end mb-3">
+  <div class="col-md-3">
+    <label class="form-label mb-1">Department</label>
+    <select name="department" class="form-select">
+      <option value="">All Departments</option>
+      <% departments.forEach(dep => { %>
+        <option value="<%= dep._id %>" <%= String(filters.department) === String(dep._id) ? 'selected' : '' %>><%= dep.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label mb-1">Course</label>
+    <select name="course" class="form-select">
+      <option value="">All Courses</option>
+      <% courses.forEach(c => { %>
+        <option value="<%= c._id %>" <%= String(filters.course) === String(c._id) ? 'selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <label class="form-label mb-1">Status</label>
+    <select name="status" class="form-select">
+      <option value="">Any Status</option>
+      <% ['active','graduated','on_leave','inactive'].forEach(s => { %>
+        <option value="<%= s %>" <%= String(filters.status) === String(s) ? 'selected' : '' %>><%= s.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="col-md-3">
+    <label class="form-label mb-1">Search</label>
+    <input type="text" name="search" class="form-control" placeholder="Name, email, roll number" value="<%= filters.search %>" />
+  </div>
+  <div class="col-md-2 d-grid">
+    <button class="btn btn-outline-secondary">Apply Filters</button>
+  </div>
+  <div class="col-md-2 d-grid">
+    <a href="/students" class="btn btn-light border">Reset</a>
+  </div>
+</form>
+<div class="table-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Roll</th>
+        <th>Department</th>
+        <th>Course</th>
+        <th>Year/Sem</th>
+        <th>Status</th>
+        <th>Login</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!students || students.length === 0) { %>
+        <tr>
+          <td colspan="9" class="text-center text-muted py-4">No students found for the selected filters.</td>
+        </tr>
+      <% } %>
+      <% students.forEach(s => { %>
+        <tr>
+          <td><a href="/students/<%= s._id %>"><%= s.name %></a></td>
+          <td><%= s.email %></td>
+          <td><%= s.rollNumber %></td>
+          <td><%= s.department?.name %></td>
+          <td><%= s.course?.name %></td>
+          <td><%= s.year %>/<%= s.semester %></td>
+          <td><span class="badge bg-<%= s.status==='active'?'success': (s.status==='graduated'?'info':'secondary') %>"><%= s.status.replace('_', ' ') %></span></td>
+          <td>
+            <% if (s.user) { %>
+              <span class="badge bg-success">Enabled</span>
+            <% } else { %>
+              <span class="badge bg-secondary">Not Created</span>
+            <% } %>
+          </td>
+          <td>
+            <% if (user && user.role === 'admin') { %>
+              <a href="/students/<%= s._id %>#issue-certificate" class="btn btn-sm btn-success">Issue Certificate</a>
+              <a href="/students/<%= s._id %>#password" class="btn btn-sm btn-outline-warning">Password</a>
+              <a href="/students/<%= s._id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+              <form action="/students/<%= s._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button class="btn btn-sm btn-outline-danger" data-confirm="Delete this student?">Delete</button>
+              </form>
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

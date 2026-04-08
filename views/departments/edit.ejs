@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Edit Department</h2>
+    <small class="text-muted">Update department details and active status</small>
+  </div>
+  <a class="btn btn-outline-secondary" href="/departments/<%= department._id %>">Back to Department</a>
+</div>
+<%- include('../partials/alerts') %>
+<div class="form-container">
+  <form action="/departments/<%= department._id %>?_method=PUT" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input type="text" name="name" class="form-control" value="<%= department.name %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Code</label>
+      <input type="text" name="code" class="form-control" value="<%= department.code %>" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Head of Department</label>
+      <input type="text" name="headOfDepartment" class="form-control" value="<%= department.headOfDepartment %>" />
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" name="isActive" id="isActive" <%= department.isActive ? 'checked' : '' %> />
+      <label class="form-check-label" for="isActive">Active</label>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Description</label>
+      <textarea name="description" class="form-control" rows="3"><%= department.description %></textarea>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary">Update</button>
+      <a class="btn btn-secondary" href="/departments/<%= department._id %>">Cancel</a>
+    </div>
+  </form>
+</div>

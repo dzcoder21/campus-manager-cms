@@ -1,0 +1,106 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Certificate Videos</h2>
+    <small class="text-muted">Complete these videos before claiming your certificate.</small>
+  </div>
+  <a href="/portal/my-courses" class="btn btn-outline-secondary btn-sm">Back to My Courses</a>
+</div>
+
+<%- include('../partials/alerts') %>
+
+<div class="card mb-4">
+  <div class="card-body">
+      <p>Watch the certificate videos below. When each video finishes, a green tick appears. After all videos are watched, the Next button will activate and let you claim the course certificate.</p>
+      <% if (videos && videos.length > 0) { %>
+        <div class="row g-3">
+          <% videos.forEach((video) => { %>
+            <div class="col-12 col-md-6">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h5 class="card-title"><%= video.name %></h5>
+                  <video data-video-name="<%= video.name %>" controls class="w-100 certificate-video" preload="metadata">
+                    <source src="<%= video.url %>" type="<%= video.type %>" />
+                    Your browser does not support the video tag.
+                  </video>
+                  <div class="mt-2">
+                    <span class="badge bg-success d-none" data-video-status="<%= video.name %>">✓ Completed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+        <% const alreadyComplete = student && student.certificateVideosWatched; %>
+        <form id="claimCertificateForm" action="/portal/claim-certificate" method="POST" class="mt-4">
+          <input type="hidden" name="courseId" value="<%= courseId %>" />
+          <input type="hidden" name="watchedAll" id="watchedAllField" value="<%= alreadyComplete ? 'true' : 'false' %>" />
+          <button id="claimCertificateButton" type="submit" class="btn btn-success" <%= alreadyComplete ? '' : 'disabled' %>>Claim Course Certificate<% if (courseTitle) { %> for <%= courseTitle %><% } %></button>
+          <div id="claimHint" class="mt-3 text-muted"><%= alreadyComplete ? 'Certificate videos are already completed. Click the button to issue the certificate.' : 'Finish watching all videos to enable the claim button.' %></div>
+        </form>
+      <% } else { %>
+        <div class="alert alert-warning">
+          No certificate videos were found in the <code>public/certificate-videos</code> folder yet.
+          Add MP4/WebM/OGG files there and refresh this page.
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const videos = Array.from(document.querySelectorAll('.certificate-video'));
+      const button = document.getElementById('claimCertificateButton');
+      const hint = document.getElementById('claimHint');
+      let watchedCount = 0;
+
+      if (!videos.length || !button) return;
+
+      function updateButton() {
+        if (watchedCount === videos.length) {
+          button.disabled = false;
+          hint.textContent = 'All videos watched. The certificate claim button is now active.';
+        }
+      }
+
+      function pauseOtherVideos(currentVideo) {
+        videos.forEach((video) => {
+          if (video !== currentVideo && !video.paused) {
+            video.pause();
+          }
+        });
+      }
+
+      const alreadyComplete = !button.disabled;
+      if (alreadyComplete) {
+        videos.forEach((video) => {
+          const status = document.querySelector(`[data-video-status="${video.dataset.videoName}"]`);
+          if (status) {
+            status.classList.remove('d-none');
+          }
+        });
+        watchedCount = videos.length;
+        updateButton();
+      }
+
+      const watchedAllField = document.getElementById('watchedAllField');
+      videos.forEach((video) => {
+        const status = document.querySelector(`[data-video-status="${video.dataset.videoName}"]`);
+        if (!status) return;
+
+        video.addEventListener('play', () => {
+          pauseOtherVideos(video);
+        });
+
+        video.addEventListener('ended', () => {
+          if (!status.classList.contains('d-none')) return;
+          status.classList.remove('d-none');
+          watchedCount += 1;
+          if (watchedCount === videos.length && watchedAllField) {
+            watchedAllField.value = 'true';
+          }
+          updateButton();
+        });
+      });
+    });
+  </script>

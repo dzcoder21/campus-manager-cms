@@ -1,0 +1,147 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0"><%= student.name %></h2>
+    <small class="text-muted">Student details and academic profile</small>
+  </div>
+  <div>
+    <% if (user && user.role === 'admin') { %>
+      <a href="#issue-certificate" class="btn btn-success">Issue Certificate</a>
+      <a href="/students/<%= student._id %>/edit" class="btn btn-outline-primary">Edit</a>
+      <form action="/students/<%= student._id %>?_method=DELETE" method="POST" class="d-inline">
+        <button class="btn btn-outline-danger" data-confirm="Delete this student?">Delete</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+<%- include('../partials/alerts') %>
+<div class="table-container">
+  <table class="table">
+    <tbody>
+      <tr><th scope="row">Email</th><td><%= student.email %></td></tr>
+      <tr><th scope="row">Roll Number</th><td><%= student.rollNumber %></td></tr>
+      <tr><th scope="row">Department</th><td><a href="/catalog/department/<%= student.department?._id %>"><%= student.department?.name %></a></td></tr>
+      <tr><th scope="row">Course</th><td><a href="/catalog/course/<%= student.course?._id %>"><%= student.course?.name %></a></td></tr>
+      <tr><th scope="row">Year/Semester</th><td><%= student.year %> / <%= student.semester %></td></tr>
+      <tr><th scope="row">Enrollment Date</th><td><%= new Date(student.enrollmentDate).toDateString() %></td></tr>
+      <tr><th scope="row">Status</th><td><span class="badge bg-<%= student.status==='active'?'success': (student.status==='graduated'?'info':'secondary') %>"><%= student.status.replace('_', ' ') %></span></td></tr>
+      <tr>
+        <th scope="row">Login Account</th>
+        <td>
+          <% if (student.user) { %>
+            <span class="badge bg-success">Enabled</span>
+          <% } else { %>
+            <span class="badge bg-secondary">Not Created</span>
+          <% } %>
+        </td>
+      </tr>
+      <tr><th scope="row">Notes</th><td><%= student.notes || '-' %></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<% if (user && user.role === 'admin') { %>
+  <div id="issue-certificate" class="form-container mt-3">
+    <h5 class="mb-2">Issue Certificate</h5>
+    <p class="text-muted mb-3">Issue a completion certificate for any enrolled course of this student.</p>
+    <form action="/students/<%= student._id %>/certificates" method="POST" class="row g-2">
+      <div class="col-md-4">
+        <label class="form-label">Course</label>
+        <select name="courseId" class="form-select" required>
+          <% if (!availableCourses || availableCourses.length === 0) { %>
+            <option value="">No eligible course found</option>
+          <% } else { %>
+            <% availableCourses.forEach((courseItem, idx) => { %>
+              <option value="<%= courseItem._id %>" <%= idx === 0 ? 'selected' : '' %>><%= courseItem.name %> (<%= courseItem.code %>)</option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Certificate Title</label>
+        <input type="text" name="title" class="form-control" value="Course Completion Certificate" maxlength="120" />
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Remarks (Optional)</label>
+        <input type="text" name="remarks" class="form-control" placeholder="Outstanding performance" maxlength="200" />
+      </div>
+      <div class="col-md-3 d-grid">
+        <button class="btn btn-success" <%= (!availableCourses || availableCourses.length === 0) ? 'disabled' : '' %>>Issue Certificate</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="password" class="form-container mt-3">
+    <h5 class="mb-2"><%= student.user ? 'Change Login Password' : 'Create Login + Set Password' %></h5>
+    <p class="text-muted mb-3">Student can use email <strong><%= student.email %></strong> and this password to login and select courses.</p>
+    <form action="/students/<%= student._id %>/password" method="POST" class="row g-2 align-items-end">
+      <div class="col-md-6">
+        <label class="form-label">New Password</label>
+        <div class="input-group">
+          <input type="password" name="password" id="studentShowPassword" class="form-control" minlength="6" required />
+          <button class="btn btn-outline-secondary" type="button" id="toggleStudentShowPassword" aria-label="Show or hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-3 d-grid">
+        <button class="btn btn-warning"><%= student.user ? 'Update Password' : 'Create Login' %></button>
+      </div>
+      <div class="col-md-3 d-grid">
+        <a class="btn btn-outline-secondary" href="/students">Back to Students</a>
+      </div>
+    </form>
+  </div>
+<% } %>
+
+<% if (user && user.role === 'admin') { %>
+  <div id="issued-certificates" class="table-container mt-3">
+    <h5 class="mb-3">Issued Certificates</h5>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Certificate No.</th>
+          <th>Course</th>
+          <th>Issued On</th>
+          <th>Issued By</th>
+          <th>Title</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!certificates || certificates.length === 0) { %>
+          <tr>
+            <td colspan="6" class="text-center text-muted py-3">No certificate issued yet.</td>
+          </tr>
+        <% } %>
+        <% if (certificates && certificates.length > 0) { %>
+          <% certificates.forEach((cert) => { %>
+            <tr>
+              <td><code><%= cert.certificateNumber %></code></td>
+              <td><%= cert.course ? `${cert.course.name} (${cert.course.code})` : '-' %></td>
+              <td><%= new Date(cert.issueDate).toLocaleDateString() %></td>
+              <td><%= cert.issuedBy ? cert.issuedBy.name : '-' %></td>
+              <td><%= cert.title %></td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="/students/certificates/<%= cert._id %>/download">Download PDF</a>
+              </td>
+            </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<script>
+  (function () {
+    const passwordField = document.getElementById('studentShowPassword');
+    const togglePassword = document.getElementById('toggleStudentShowPassword');
+    if (!passwordField || !togglePassword) return;
+
+    togglePassword.addEventListener('click', () => {
+      const isPassword = passwordField.type === 'password';
+      passwordField.type = isPassword ? 'text' : 'password';
+      togglePassword.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+    });
+  })();
+</script>

@@ -1,0 +1,84 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Modules Structure</h2>
+  <a href="/modules" class="btn btn-outline-secondary">Back to Modules List</a>
+</div>
+<%- include('../partials/alerts') %>
+
+<% 
+  const departments = Object.values(structure || {});
+  if (!departments.length) { 
+%>
+  <div class="alert alert-info">No modules found. Try adding some modules first.</div>
+<% } %>
+
+<div class="accordion" id="deptAccordion">
+  <% departments.forEach((dep, dIdx) => { %>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading-<%= dep._id %>">
+        <button class="accordion-button <%= dIdx === 0 ? '' : 'collapsed' %>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= dep._id %>" aria-expanded="<%= dIdx === 0 ? 'true' : 'false' %>" aria-controls="collapse-<%= dep._id %>">
+          <strong><%= dep.name %></strong> (<%= dep.code %>)
+        </button>
+      </h2>
+      <div id="collapse-<%= dep._id %>" class="accordion-collapse collapse <%= dIdx === 0 ? 'show' : '' %>" aria-labelledby="heading-<%= dep._id %>" data-bs-parent="#deptAccordion">
+        <div class="accordion-body">
+          <% const courses = Object.values(dep.courses || {}); %>
+          <% if (!courses.length) { %>
+            <p class="text-muted mb-0">No courses in this department.</p>
+          <% } else { %>
+            <div class="accordion" id="courseAccordion-<%= dep._id %>">
+              <% courses.forEach((course, cIdx) => { %>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="heading-course-<%= course._id %>">
+                    <button class="accordion-button <%= cIdx === 0 ? '' : 'collapsed' %>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-course-<%= course._id %>" aria-expanded="<%= cIdx === 0 ? 'true' : 'false' %>" aria-controls="collapse-course-<%= course._id %>">
+                      <strong><%= course.name %></strong> (<%= course.code %>)
+                    </button>
+                  </h2>
+                  <div id="collapse-course-<%= course._id %>" class="accordion-collapse collapse <%= cIdx === 0 ? 'show' : '' %>" aria-labelledby="heading-course-<%= course._id %>" data-bs-parent="#courseAccordion-<%= dep._id %>">
+                    <div class="accordion-body">
+                      <% const semesters = Object.keys(course.semesters || {}).sort((a,b)=>Number(a)-Number(b)); %>
+                      <% if (!semesters.length) { %>
+                        <p class="text-muted mb-0">No modules for this course.</p>
+                      <% } else { %>
+                        <% semesters.forEach(sem => { %>
+                          <div class="table-container mb-4">
+                            <h6 class="mb-3">Semester <%= sem %></h6>
+                            <table class="table table-striped">
+                              <thead>
+                                <tr>
+                                  <th>Code</th>
+                                  <th>Name</th>
+                                  <th>Credits</th>
+                                  <th>Core</th>
+                                  <th>Lecturer</th>
+                                  <th></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% course.semesters[sem].forEach(m => { %>
+                                  <tr>
+                                    <td><%= m.code %></td>
+                                    <td><a href="/modules/<%= m._id %>"><%= m.name %></a></td>
+                                    <td><%= m.credits %></td>
+                                    <td><%= m.isCore ? 'Yes' : 'No' %></td>
+                                    <td><%= m.lecturer || '-' %></td>
+                                    <td class="text-end">
+                                      <a class="btn btn-sm btn-outline-primary" href="/modules/<%= m._id %>/edit">Edit</a>
+                                    </td>
+                                  </tr>
+                                <% }) %>
+                              </tbody>
+                            </table>
+                          </div>
+                        <% }) %>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>

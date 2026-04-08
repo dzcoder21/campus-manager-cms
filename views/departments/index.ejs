@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Departments</h2>
+    <small class="text-muted">Total: <%= departments.length %> departments</small>
+  </div>
+  <% if (user && user.role === 'admin') { %>
+    <a href="/departments/new" class="btn btn-primary">Add Department</a>
+  <% } %>
+</div>
+<%- include('../partials/alerts') %>
+<div class="table-container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Code</th>
+        <th>Head</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!departments || departments.length === 0) { %>
+        <tr>
+          <td colspan="5" class="text-center text-muted py-4">No departments available.</td>
+        </tr>
+      <% } %>
+      <% departments.forEach(d => { %>
+        <tr>
+          <td><a href="/departments/<%= d._id %>"><%= d.name %></a></td>
+          <td><%= d.code %></td>
+          <td><%= d.headOfDepartment || '-' %></td>
+          <td><span class="badge <%= d.isActive ? 'bg-success' : 'bg-secondary' %>"><%= d.isActive ? 'Active' : 'Inactive' %></span></td>
+          <td>
+            <% if (user && user.role === 'admin') { %>
+              <a href="/departments/<%= d._id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+              <form action="/departments/<%= d._id %>?_method=DELETE" method="POST" class="d-inline">
+                <button class="btn btn-sm btn-outline-danger" data-confirm="Delete this department?">Delete</button>
+              </form>
+            <% } else { %>
+              -
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,68 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">My Courses</h2>
+  <div class="d-flex gap-2">
+    <a href="/portal/certificates" class="btn btn-outline-primary btn-sm">My Certificates</a>
+    <a href="/portal/certificate-videos" class="btn btn-outline-warning btn-sm">Certificate Videos</a>
+    <a href="/catalog" class="btn btn-outline-secondary btn-sm">Browse Catalog</a>
+  </div>
+</div>
+
+<%- include('../partials/alerts') %>
+
+<% if (!student || !student.certificateVideosWatched) { %>
+  <div class="alert alert-info">
+    Please watch the certificate videos first before claiming your certificate.
+    <a href="/portal/certificate-videos" class="btn btn-sm btn-primary ms-2">Watch Certificate Videos</a>
+  </div>
+<% } else { %>
+  <div class="alert alert-success">
+    Certificate videos completed. You can now claim certificates for your enrolled courses.
+  </div>
+<% } %>
+
+<% if (!enrollments || enrollments.length === 0) { %>
+  <div class="alert alert-info">You are not enrolled in any courses yet.</div>
+<% } else { %>
+  <div class="table-container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Code</th>
+          <th>Department</th>
+          <th>Status</th>
+          <th>Joined</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% enrollments.forEach((item) => { const course = item.course; if (!course) return; %>
+          <tr>
+            <td><a href="/catalog/course/<%= course._id %>"><%= course.name %></a></td>
+            <td><%= course.code %></td>
+            <td><%= course.department ? `${course.department.name} (${course.department.code})` : '-' %></td>
+            <td><span class="badge bg-success">Enrolled</span></td>
+            <td><%= new Date(item.joinedAt || item.createdAt).toLocaleDateString() %></td>
+            <td class="text-end">
+              <% const hasCertificate = issuedCourseIds && issuedCourseIds.has(String(course._id)); %>
+              <% if (!student || !student.certificateVideosWatched) { %>
+                <a href="/portal/certificate-videos" class="btn btn-sm btn-secondary disabled">Watch Videos First</a>
+              <% } else if (hasCertificate) { %>
+                <a class="btn btn-sm btn-outline-primary" href="/portal/certificates">View Certificate</a>
+              <% } else { %>
+                <form action="/portal/claim-certificate" method="POST" class="d-inline me-1">
+                  <input type="hidden" name="courseId" value="<%= course._id %>" />
+                  <button class="btn btn-sm btn-success">Get Certificate</button>
+                </form>
+              <% } %>
+              <form action="/portal/drop" method="POST" class="d-inline">
+                <input type="hidden" name="courseId" value="<%= course._id %>" />
+                <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Drop this course?')">Drop</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

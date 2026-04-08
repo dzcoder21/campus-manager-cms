@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0"><%= module.name %> (<%= module.code %>)</h2>
+    <small class="text-muted">Module details, outcomes, and prerequisites</small>
+  </div>
+  <% if (user && user.role === 'admin') { %>
+    <div>
+      <a href="/modules/<%= module._id %>/edit" class="btn btn-outline-primary">Edit</a>
+      <form action="/modules/<%= module._id %>?_method=DELETE" method="POST" class="d-inline">
+        <button class="btn btn-outline-danger" data-confirm="Delete this module?">Delete</button>
+      </form>
+    </div>
+  <% } %>
+</div>
+<div class="mb-3">
+  <a href="/modules" class="btn btn-light border btn-sm">Back to Modules</a>
+</div>
+<%- include('../partials/alerts') %>
+<p><strong>Course:</strong> <a href="/courses/<%= module.course?._id %>"><%= module.course?.name %></a></p>
+<p><strong>Department:</strong> <a href="/departments/<%= module.department?._id %>"><%= module.department?.name %></a></p>
+<p><strong>Semester:</strong> <%= module.semester %></p>
+<p><strong>Credits:</strong> <%= module.credits %></p>
+<p><strong>Core:</strong> <%= module.isCore ? 'Yes' : 'No' %></p>
+<p><strong>Lecturer:</strong> <%= module.lecturer || '-' %></p>
+<p><strong>Description:</strong> <%= module.description || '-' %></p>
+<hr/>
+<h4>Learning Outcomes</h4>
+<ul>
+  <% if (module.learningOutcomes && module.learningOutcomes.length) { %>
+    <% module.learningOutcomes.forEach(lo => { %>
+      <li><%= lo %></li>
+    <% }) %>
+  <% } else { %>
+    <li>None specified.</li>
+  <% } %>
+</ul>
+<hr/>
+<h4>Assessment</h4>
+<ul>
+  <li>Exam: <%= module.assessmentMethods.exam %>%</li>
+  <li>Coursework: <%= module.assessmentMethods.coursework %>%</li>
+  <li>Practical: <%= module.assessmentMethods.practical %>%</li>
+</ul>
+<hr/>
+<h4>Prerequisites</h4>
+<ul>
+  <% if (module.prerequisites && module.prerequisites.length) { %>
+    <% module.prerequisites.forEach(p => { %>
+      <li><a href="/modules/<%= p._id %>"><%= p.name %> (<%= p.code %>)</a></li>
+    <% }) %>
+  <% } else { %>
+    <li>None.</li>
+  <% } %>
+</ul>

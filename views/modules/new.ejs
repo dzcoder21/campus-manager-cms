@@ -1,0 +1,97 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">Add Module</h2>
+    <small class="text-muted">Create a module with outcomes, assessment, and prerequisites</small>
+  </div>
+  <a class="btn btn-outline-secondary" href="/modules">Back to Modules</a>
+</div>
+<%- include('../partials/alerts') %>
+<div class="form-container">
+  <form action="/modules" method="POST">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Code</label>
+        <input type="text" name="code" class="form-control" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Course</label>
+        <select name="course" id="module-course-select" class="form-select" required>
+          <% courses.forEach(c => { %>
+            <option value="<%= c._id %>" data-dept="<%= c.department %>" <%= String(preselectedCourseId||'') === String(c._id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }) %>
+        </select>
+        <% if (preselectedCourseId) { %>
+          <div class="form-text">Preselected from course context.</div>
+        <% } %>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Department</label>
+        <select name="department" id="module-dept-select" class="form-select" required>
+          <% departments.forEach(dep => { %>
+            <option value="<%= dep._id %>" <%= String(preselectedDepartmentId||'') === String(dep._id) ? 'selected' : '' %>><%= dep.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Credits</label>
+        <input type="number" name="credits" class="form-control" min="1" required />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Semester</label>
+        <select name="semester" class="form-select" required>
+          <% semesters.forEach(s => { %>
+            <option value="<%= s %>"><%= s %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-12 form-check">
+        <input class="form-check-input" type="checkbox" name="isCore" id="isCore" checked />
+        <label class="form-check-label" for="isCore">Core module</label>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Lecturer</label>
+        <input type="text" name="lecturer" class="form-control" />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Prerequisites</label>
+        <select name="prerequisites" class="form-select" multiple>
+          <% existingModules.forEach(m => { %>
+            <option value="<%= m._id %>"><%= m.name %> (<%= m.code %>)</option>
+          <% }) %>
+        </select>
+        <div class="form-text">Hold Ctrl/Cmd to select multiple modules.</div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Learning Outcomes (one per line)</label>
+        <textarea name="learningOutcomes" class="form-control" rows="4"></textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Assessment Weights</label>
+        <div class="row g-2">
+          <div class="col-md-4">
+            <input type="number" name="examWeight" class="form-control" placeholder="Exam %" value="60" min="0" max="100" />
+          </div>
+          <div class="col-md-4">
+            <input type="number" name="courseworkWeight" class="form-control" placeholder="Coursework %" value="40" min="0" max="100" />
+          </div>
+          <div class="col-md-4">
+            <input type="number" name="practicalWeight" class="form-control" placeholder="Practical %" value="0" min="0" max="100" />
+          </div>
+        </div>
+        <div class="form-text">Exam + Coursework + Practical should total 100%.</div>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary">Create</button>
+      <a class="btn btn-secondary" href="/modules">Cancel</a>
+    </div>
+  </form>
+</div>

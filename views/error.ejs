@@ -1,0 +1,9 @@
+<div class="container py-5">
+  <%- include('partials/alerts') %>
+  <h1 class="display-6 mb-3"><%= title %></h1>
+  <p class="lead"><%= message %></p>
+  <% if (error && error.stack) { %>
+    <pre class="bg-light p-3 border rounded"><%= error.stack %></pre>
+  <% } %>
+  <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+</div>

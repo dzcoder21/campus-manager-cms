@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0"><%= department.name %> (<%= department.code %>)</h2>
+    <small class="text-muted">Department profile and associated courses</small>
+  </div>
+  <% if (user && user.role === 'admin') { %>
+    <div>
+      <a href="/departments/<%= department._id %>/edit" class="btn btn-outline-primary">Edit</a>
+      <form action="/departments/<%= department._id %>?_method=DELETE" method="POST" class="d-inline">
+        <button class="btn btn-outline-danger" data-confirm="Delete this department?">Delete</button>
+      </form>
+    </div>
+  <% } %>
+</div>
+<div class="mb-3">
+  <a href="/departments" class="btn btn-light border btn-sm">Back to Departments</a>
+</div>
+<%- include('../partials/alerts') %>
+<p><strong>Head:</strong> <%= department.headOfDepartment || '-' %></p>
+<p><strong>Description:</strong> <%= department.description || '-' %></p>
+<p><strong>Status:</strong> <span class="badge <%= department.isActive ? 'bg-success' : 'bg-secondary' %>"><%= department.isActive ? 'Active' : 'Inactive' %></span></p>
+<hr/>
+<h4>Courses</h4>
+<ul>
+  <% if (department.courses && department.courses.length) { %>
+    <% department.courses.forEach(c => { %>
+      <li><a href="/courses/<%= c._id %>"><%= c.name %> (<%= c.code %>)</a></li>
+    <% }) %>
+  <% } else { %>
+    <li>No courses yet.</li>
+  <% } %>
+</ul>

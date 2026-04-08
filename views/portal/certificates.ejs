@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2 class="mb-0">My Certificates</h2>
+    <small class="text-muted">Download your issued course certificates in PDF format</small>
+  </div>
+  <a href="/portal/my-courses" class="btn btn-outline-secondary btn-sm">Back to My Courses</a>
+</div>
+
+<%- include('../partials/alerts') %>
+
+<% if (!certificates || certificates.length === 0) { %>
+  <div class="alert alert-info">No certificate has been issued for your account yet.</div>
+<% } else { %>
+  <div class="table-container">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Certificate No.</th>
+          <th>Course</th>
+          <th>Issue Date</th>
+          <th>Issued By</th>
+          <th>Title</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% certificates.forEach((cert) => { %>
+          <tr>
+            <td><code><%= cert.certificateNumber %></code></td>
+            <td><%= cert.course ? `${cert.course.name} (${cert.course.code})` : '-' %></td>
+            <td><%= new Date(cert.issueDate).toLocaleDateString() %></td>
+            <td><%= cert.issuedBy ? cert.issuedBy.name : '-' %></td>
+            <td><%= cert.title %></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-primary" href="/portal/certificates/<%= cert._id %>/download">Download PDF</a>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
